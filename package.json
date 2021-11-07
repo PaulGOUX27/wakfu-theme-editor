@@ -1,0 +1,68 @@
+{
+  "name": "electron-svelte-typescript-template",
+  "version": "0.0.1",
+  "private": true,
+  "main": "dist/index.js",
+  "scripts": {
+    "build": "rollup -c",
+    "check": "svelte-check --tsconfig src/app/tsconfig.json",
+    "compile": "tsc",
+    "dev": "rollup -c -w",
+    "nodemon": "nodemon",
+    "out:win": "rollup -c && tsc && electron-builder build --win --publish never",
+    "publish:win": "rollup -c && tsc && electron-builder build --win --publish always",
+    "start": "npm run compile && electron ."
+  },
+  "devDependencies": {
+    "@rollup/plugin-commonjs": "^17.0.0",
+    "@rollup/plugin-node-resolve": "^11.0.0",
+    "@rollup/plugin-typescript": "^8.0.0",
+    "@tsconfig/svelte": "^2.0.0",
+    "electron": "^15.3.0",
+    "electron-builder": "^22.13.1",
+    "nodemon": "^2.0.14",
+    "rollup": "^2.3.4",
+    "rollup-plugin-copy": "^3.4.0",
+    "rollup-plugin-css-only": "^3.1.0",
+    "rollup-plugin-livereload": "^2.0.0",
+    "rollup-plugin-svelte": "^7.0.0",
+    "rollup-plugin-terser": "^7.0.0",
+    "svelte": "^3.0.0",
+    "svelte-check": "^2.0.0",
+    "svelte-preprocess": "^4.0.0",
+    "tslib": "^2.0.0",
+    "typescript": "^4.4.4"
+  },
+  "dependencies": {
+    "electron-reload": "^2.0.0-alpha.1",
+    "electron-updater": "^4.3.9",
+    "sirv-cli": "^1.0.0"
+  },
+  "build": {
+    "appId": "git-notify",
+    "directories": {
+      "output": "out"
+    },
+    "publish": [
+      {
+        "provider": "github",
+        "owner": "PaulGOUX27",
+        "repo": "git-notify"
+      }
+    ],
+    "win": {
+      "target": [
+        "nsis"
+      ],
+      "icon": "icon.ico"
+    },
+    "nsis": {
+      "installerIcon": "icon.ico",
+      "uninstallerIcon": "icon.ico",
+      "uninstallDisplayName": "Git Notify (Svelte+Electron+TypeScript)",
+      "license": "license.txt",
+      "oneClick": false,
+      "allowToChangeInstallationDirectory": true
+    }
+  }
+}
