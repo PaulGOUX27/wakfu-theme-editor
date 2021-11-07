@@ -1,11 +1,12 @@
 <script lang="ts">
-	import { downloadJSONThemeFromWakfu } from "./services/theme-download";
+	import { getTheme } from "./services/wakfuCDNClient";
 
 	let data;
 
 	async function download() {
 		try {
-			data = JSON.stringify(await downloadJSONThemeFromWakfu());
+			data = JSON.stringify(await getTheme());
+			console.log("done")
 		}catch (e) {
 			console.log(e)
 		}
@@ -15,9 +16,7 @@
 <main>
 	bonjour
 	<button on:click={download}>Download</button>
-	<pre>
-		{data}
-	</pre>
+	<textarea value={data}></textarea>
 </main>
 
 <style>
