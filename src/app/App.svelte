@@ -1,22 +1,22 @@
 <script lang="ts">
-	import { getTheme } from "./services/wakfuCDNClient";
+  import { getTheme } from './services/wakfuCDNClient';
 
-	let data;
+  let data;
 
-	async function download() {
-		try {
-			data = JSON.stringify(await getTheme());
-			console.log("done")
-		}catch (e) {
-			console.log(e)
-		}
-	}
+  async function download() {
+    try {
+      data = JSON.stringify(await getTheme());
+      console.log('done');
+    } catch (e) {
+      console.log(e);
+    }
+  }
 </script>
 
 <main>
-	bonjour
-	<button on:click={download}>Download</button>
-	<textarea value={data}></textarea>
+  bonjour
+  <button on:click={download}>Download</button>
+  <textarea value={data} />
 </main>
 
 <style>
