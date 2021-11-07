@@ -1,5 +1,5 @@
 {
-  "name": "electron-svelte-typescript-template",
+  "name": "wakfu-theme-editor",
   "version": "0.0.1",
   "private": true,
   "main": "dist/index.js",
@@ -39,7 +39,7 @@
     "sirv-cli": "^1.0.0"
   },
   "build": {
-    "appId": "git-notify",
+    "appId": "wakfu-theme-editor",
     "directories": {
       "output": "out"
     },
@@ -47,7 +47,7 @@
       {
         "provider": "github",
         "owner": "PaulGOUX27",
-        "repo": "git-notify"
+        "repo": "wakfu-theme-editor"
       }
     ],
     "win": {
