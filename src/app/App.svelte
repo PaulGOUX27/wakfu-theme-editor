@@ -1,12 +1,12 @@
 <script lang="ts">
-  import { getTheme } from './services/wakfuCDNClient';
+  import {getTheme} from './services/wakfuCDNClient';
+  import PixmapList from './Components/PixmapList.svelte';
 
   let data;
 
   async function download() {
     try {
-      data = JSON.stringify(await getTheme());
-      console.log('done');
+      data = await getTheme();
     } catch (e) {
       console.log(e);
     }
@@ -14,9 +14,9 @@
 </script>
 
 <main>
-  bonjour
   <button on:click={download}>Download</button>
-  <textarea value={data} />
+  <textarea value={JSON.stringify(data)} />
+  <PixmapList pixmaps={data?.pixmaps}/>
 </main>
 
 <style>
