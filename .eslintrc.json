@@ -19,7 +19,7 @@
   ],
   "overrides": [
     {
-      "files": ["**/*.svelte"],
+      "files": ["*.svelte"],
       "processor": "svelte3/svelte3"
     }
   ],
@@ -44,5 +44,8 @@
       }
     ],
     "semi": [1, "always"]
+  },
+  "settings": {
+    "svelte3/typescript": true
   }
 }

@@ -3,11 +3,11 @@ import commonjs from '@rollup/plugin-commonjs'
 import resolve from '@rollup/plugin-node-resolve'
 import livereload from 'rollup-plugin-livereload'
 import { terser } from 'rollup-plugin-terser'
-import sveltePreprocess from 'svelte-preprocess'
 import typescript from '@rollup/plugin-typescript'
 import css from 'rollup-plugin-css-only'
 import copy from 'rollup-plugin-copy'
 import json from 'rollup-plugin-json'
+import autoPreprocess from 'svelte-preprocess';
 
 const production = !process.env.ROLLUP_WATCH
 
@@ -46,11 +46,7 @@ export default {
   },
   plugins: [
     svelte({
-      preprocess: sveltePreprocess({ sourceMap: !production }),
-      compilerOptions: {
-        // enable run-time checks when not in production
-        dev: !production,
-      },
+      preprocess: autoPreprocess(),
     }),
     // we'll extract any component CSS out into
     // a separate file - better for performance
