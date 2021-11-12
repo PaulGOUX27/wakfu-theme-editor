@@ -1,7 +1,7 @@
 import { app } from 'electron';
 import path from 'path';
 import {CustomWindow} from './customWindow';
-import {systemInfos} from './IPC/IPCs/systemInfos';
+import {IPCS} from './IPC/IPCs';
 
 // eslint-disable-next-line
 require('electron-reload')(__dirname)
@@ -21,5 +21,5 @@ async function createMainWindow() {
   const url = path.join(__dirname, 'www', 'index.html');
   await mainWindow.createWindow(url);
 
-  await mainWindow.setIpcMain([systemInfos]);
+  await mainWindow.setIpcMain(IPCS);
 }

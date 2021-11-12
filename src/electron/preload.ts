@@ -1,8 +1,8 @@
 import {generateContextBridge} from './IPC/utils/contextBridge';
 
-import {systemInfos} from './IPC/IPCs/systemInfos';
+import {IPCS} from './IPC/IPCs';
 
-generateContextBridge([systemInfos]);
+generateContextBridge(IPCS);
 
 /* import { contextBridge, ipcRenderer, Notification } from 'electron';
 

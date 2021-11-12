@@ -23,7 +23,7 @@ export default class IPC {
     async initIpcMain(ipcMain: IpcMain, customWindow: BrowserWindow){
         if(customWindow) {
             Object.keys(this.validSendChannel).forEach((key: string) => {
-               ipcMain.on(key, async(event, message) => {
+               ipcMain.on(key, async(event, message: unknown) => {
                    try {
                        await this.validSendChannel[key](customWindow, event, message);
                    } catch (e) {
