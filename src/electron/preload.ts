@@ -1,4 +1,10 @@
-import { contextBridge, ipcRenderer, Notification } from 'electron';
+import {generateContextBridge} from './IPC/utils/contextBridge';
+
+import {systemInfos} from './IPC/IPCs/systemInfos';
+
+generateContextBridge([systemInfos]);
+
+/* import { contextBridge, ipcRenderer, Notification } from 'electron';
 
 import { autoUpdater } from 'electron-updater';
 
@@ -50,3 +56,4 @@ contextBridge.exposeInMainWorld('api', {
     }
   },
 });
+ */

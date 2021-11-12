@@ -2,11 +2,11 @@
   "env": {
     "browser": true,
     "es6": true,
-    "node": true
+    "node": true,
+    "es2020": true
   },
   "parser": "@typescript-eslint/parser",
   "parserOptions": {
-    "ecmaVersion": 2019,
     "sourceType": "module"
   },
   "plugins": ["svelte3", "import", "@typescript-eslint"],
