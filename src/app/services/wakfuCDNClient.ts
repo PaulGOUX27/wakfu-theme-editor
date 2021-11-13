@@ -1,5 +1,6 @@
 import axios from 'axios';
 import type { Theme } from '../types/core';
+import {loadTheme, saveTheme} from './appFileManager';
 
 const wakfuCDNClient = axios.create({
   baseURL: 'https://wakfu.cdn.ankama.com/gamedata/',
@@ -88,7 +89,13 @@ function formatJSONTheme(data: Theme) {
 }
 
 export async function getTheme(): Promise<Theme> {
-  const data = await downloadJSONThemeFromWakfu();
-  formatJSONTheme(data);
-  return data;
+  try {
+    const res = await loadTheme();
+    return JSON.parse(new TextDecoder().decode(res));
+  } catch {
+    const data = await downloadJSONThemeFromWakfu();
+    formatJSONTheme(data);
+    await saveTheme(data);
+    return data;
+  }
 }
