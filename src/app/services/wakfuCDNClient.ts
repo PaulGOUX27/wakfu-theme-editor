@@ -1,9 +1,10 @@
-import axios from 'axios';
-import type { Theme } from '../types/core';
-import {loadTheme, saveTheme} from './appFileManager';
+import axios, {AxiosResponse} from 'axios';
+import type {Texture, Theme} from '../types/core';
+import {download, loadTheme, saveTheme} from './appFileManager';
+import {WAKFU_CDN} from '../../utils/consts';
 
 const wakfuCDNClient = axios.create({
-  baseURL: 'https://wakfu.cdn.ankama.com/gamedata/',
+  baseURL: WAKFU_CDN,
 });
 
 async function downloadJSONThemeFromWakfu(): Promise<Theme> {
@@ -15,6 +16,18 @@ async function downloadJSONThemeFromWakfu(): Promise<Theme> {
   });
 
   return res.data;
+}
+
+async function downloadTexturesFromWakfu(textures: Texture[]): Promise<void> {
+  const promises: Promise<unknown>[] = [];
+
+  textures.forEach((texture) => {
+    const path = texture.path.replace('.tga', '.png');
+    const promise = download(WAKFU_CDN + path, path);
+    promises.push(promise);
+  });
+
+  await Promise.all(promises);
 }
 
 function formatJSONTheme(data: Theme) {
@@ -96,6 +109,7 @@ export async function getTheme(): Promise<Theme> {
     const data = await downloadJSONThemeFromWakfu();
     formatJSONTheme(data);
     await saveTheme(data);
+    await downloadTexturesFromWakfu(data.textures);
     return data;
   }
 }

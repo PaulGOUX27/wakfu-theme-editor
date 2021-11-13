@@ -2,6 +2,7 @@ import IPC from '../utils/IPC';
 import {BrowserWindow, app } from 'electron';
 import fs from 'fs';
 import Path from 'path';
+import axios from 'axios';
 
 type SaveMessage = {
     path: string;
@@ -12,8 +13,54 @@ type LoadMessage = {
     path: string;
 }
 
+type DownloadMessage = {
+    path: string;
+    url: string;
+}
+
 function realPath(path: string): string {
-    return app.getPath('userData') + '/' + path;
+    return app.getPath('userData') + '/data/' + path;
+}
+
+async function handleDownload(mainWindow: BrowserWindow, event: Electron.IpcMainEvent, message: unknown) {
+    const {path, url} = message as DownloadMessage;
+    if (!path || !url) {
+        mainWindow.webContents.send('savedFile', {
+            path: path,
+            success: false,
+            error: 'No path & url received'
+        });
+    }
+
+    const _realPath: string = realPath(path);
+    const dir = Path.dirname(_realPath);
+
+    if (!fs.existsSync(dir)){
+        fs.mkdirSync(dir, { recursive: true });
+    }
+
+    const res = await axios.get(url, { responseType: 'stream' });
+
+    const writer = fs.createWriteStream(_realPath);
+
+    res.data.pipe(writer);
+
+    writer.on('finish', () => {
+        mainWindow.webContents.send('downloaded', {
+            path: path,
+            success: true,
+            url
+        });
+    });
+
+    writer.on('error', (error) => {
+        mainWindow.webContents.send('downloaded', {
+            path: path,
+            success: false,
+            error: error,
+            url
+        });
+    });
 }
 
 function handleSave(mainWindow: BrowserWindow, event: Electron.IpcMainEvent, message: unknown) {
@@ -73,9 +120,10 @@ function handleLoad(mainWindow: BrowserWindow, event: Electron.IpcMainEvent, mes
 
 export const appFiles = new IPC({
     nameAPI : 'appFiles',
-    validReceiveChannel: ['savedFile', 'loadedFile'],
+    validReceiveChannel: ['savedFile', 'loadedFile', 'downloaded'],
     validSendChannel: {
         'saveFile': handleSave,
         'loadFile': handleLoad,
+        'download': handleDownload,
     }
 });
