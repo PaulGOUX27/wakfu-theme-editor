@@ -3,12 +3,24 @@
     import Pixmap from './Pixmap.svelte';
 
     export let pixmaps: PixmapType[] = [];
+
+    let value = '';
+
+    // TODO pixmaps without id are not here
+    $: filteredPixmaps = pixmaps.filter(pixmap => pixmap.id?.toLowerCase().includes(value.toLocaleString()));
 </script>
 
 
 <div>
-    This is pixmap list
-    {#each pixmaps as pixmap}
-        <Pixmap {pixmap}/>
+    <input type="text" bind:value/>
+    {#each filteredPixmaps as pixmap}
+        <hr/>
+        <Pixmap on:pixmapClicked {pixmap}/>
     {/each}
 </div>
+
+<style>
+    hr {
+        margin: 0px;
+    }
+</style>

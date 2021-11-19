@@ -1,6 +1,6 @@
 <script lang="ts">
   import {getTheme} from './services/wakfuCDNClient';
-  import PixmapList from './Components/PixmapList.svelte';
+  import PixmapView from './Views/Pixmaps/PixmapView.svelte';
 
   let data;
 
@@ -15,7 +15,7 @@
 
 <main>
   <button on:click={download}>Load theme</button>
-  <PixmapList pixmaps={data?.pixmaps}/>
+  <PixmapView {data}/>
 </main>
 
 <style>
