@@ -3,6 +3,11 @@
   "version": "0.0.1",
   "private": true,
   "main": "dist/index.js",
+  "description": "An application to manage Wakfu theme. This tool is not related in any way to Ankama, publisher of Wakfu",
+  "author": {
+    "name": "Paul Goux"
+  },
+  "license": "MIT",
   "scripts": {
     "build": "rollup -c",
     "check": "svelte-check --tsconfig src/app/tsconfig.json",
@@ -52,26 +57,19 @@
     "directories": {
       "output": "out"
     },
-    "publish": [
-      {
-        "provider": "github",
-        "owner": "PaulGOUX27",
-        "repo": "wakfu-theme-editor"
-      }
-    ],
     "win": {
-      "target": [
-        "nsis"
-      ],
       "icon": "icon.ico"
     },
     "nsis": {
       "installerIcon": "icon.ico",
       "uninstallerIcon": "icon.ico",
-      "uninstallDisplayName": "Git Notify (Svelte+Electron+TypeScript)",
-      "license": "license.txt",
-      "oneClick": false,
-      "allowToChangeInstallationDirectory": true
+      "uninstallDisplayName": "Wakfu Theme Editor",
+      "license": "license.txt"
+    },
+    "publish": {
+        "provider": "github",
+        "owner": "PaulGOUX27",
+        "repo": "wakfu-theme-editor"
     }
   }
 }
