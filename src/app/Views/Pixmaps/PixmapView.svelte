@@ -18,7 +18,7 @@
     </div>
     <div id="content">
         {#if !selectedPixmap}
-            <div>Select a pixmap on the list</div>
+            <div>Select a pixmap in the list</div>
         {:else}
             <div>{selectedPixmap?.id}</div>
         {/if}

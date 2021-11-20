@@ -6,77 +6,44 @@ const pendingFiles: Map<string, {resolve, reject}> = new Map();
 
 export async function download(url: string, path: string) {
     return new Promise((resolve, reject) => {
-        globalThis.api.appFiles.send('download', {url, path});
+        globalThis.api.appFiles.send('download', {url, path, id: path});
         pendingFiles.set(url, {resolve, reject});
     });
 }
 
 export async function saveTheme(data: Theme) {
     return new Promise((resolve, reject) => {
-        globalThis.api.appFiles.send('saveFile', {path:themePath, data});
+        globalThis.api.appFiles.send('saveFile', {path:themePath, data, id: themePath});
         pendingFiles.set(themePath, {resolve, reject});
     });
 }
 
 export async function loadTheme(): Promise<Buffer> {
     return new Promise((resolve, reject) => {
-        globalThis.api.appFiles.send('loadFile', {path:themePath});
+        globalThis.api.appFiles.send('loadFile', {path:themePath, id: themePath});
         pendingFiles.set(themePath, {resolve, reject});
     });
 }
 
-globalThis.api.appFiles.receive('downloaded', (response) => {
-    const { url, success, error } = response;
-    if(!pendingFiles.has(url)) {
-        return;
-    }
 
-    let func, message;
-    if(success) {
-        func = pendingFiles.get(url).resolve;
-        message = 'OK';
-    } else {
-        func = pendingFiles.get(url).reject;
-        message = error;
-    }
-    pendingFiles.delete(url);
-    func(message);
-});
+// Handle IPC Response
+['downloaded', 'loadedFile','savedFile'].forEach(key => {
+    globalThis.api.appFiles.receive(key, (response) => {
+        const { success, data, error, id } = response;
 
-globalThis.api.appFiles.receive('loadedFile', (response) => {
-    const { path, success, data, error } = response;
-
-    if(!pendingFiles.has(path)) {
-        return;
-    }
-
-    let func, message;
-    if(success) {
-        func = pendingFiles.get(path).resolve;
-        message = data;
-    } else {
-        func = pendingFiles.get(path).reject;
-        message = error;
-    }
-    pendingFiles.delete(path);
-    func(message);
-});
-
-globalThis.api.appFiles.receive('savedFile', (response) => {
-    const { path, success, error } = response;
-
-    if(!pendingFiles.has(path)) {
-        return;
-    }
-
-    let func, message;
-    if(success) {
-        func = pendingFiles.get(path).resolve;
-        message = 'OK';
-    } else {
-        func = pendingFiles.get(path).reject;
-        message = error;
-    }
-    pendingFiles.delete(path);
-    func(message);
+        if(!pendingFiles.has(id)) {
+            // TODO add log error as it shouldn't occur
+            return;
+        }
+        let func, message;
+        if(success) {
+            func = pendingFiles.get(id).resolve;
+            message = data;
+        } else {
+            func = pendingFiles.get(id).reject;
+            message = error;
+        }
+        pendingFiles.delete(id);
+        func(message);
+    });
 });

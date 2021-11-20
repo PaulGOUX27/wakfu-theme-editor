@@ -4,16 +4,20 @@ import fs from 'fs';
 import Path from 'path';
 import axios from 'axios';
 
-type SaveMessage = {
+type BaseMessage = {
+    id: string;
+}
+
+type SaveMessage = BaseMessage & {
     path: string;
     data: unknown;
 }
 
-type LoadMessage = {
+type LoadMessage = BaseMessage & {
     path: string;
 }
 
-type DownloadMessage = {
+type DownloadMessage = BaseMessage & {
     path: string;
     url: string;
 }
@@ -23,12 +27,13 @@ function realPath(path: string): string {
 }
 
 async function handleDownload(mainWindow: BrowserWindow, event: Electron.IpcMainEvent, message: unknown) {
-    const {path, url} = message as DownloadMessage;
+    const {path, url, id} = message as DownloadMessage;
     if (!path || !url) {
         mainWindow.webContents.send('savedFile', {
             path: path,
             success: false,
-            error: 'No path & url received'
+            error: 'No path & url received',
+            id
         });
     }
 
@@ -49,7 +54,8 @@ async function handleDownload(mainWindow: BrowserWindow, event: Electron.IpcMain
         mainWindow.webContents.send('downloaded', {
             path: path,
             success: true,
-            url
+            url,
+            id
         });
     });
 
@@ -58,20 +64,21 @@ async function handleDownload(mainWindow: BrowserWindow, event: Electron.IpcMain
             path: path,
             success: false,
             error: error,
-            url
+            url,
+            id
         });
     });
 }
 
 function handleSave(mainWindow: BrowserWindow, event: Electron.IpcMainEvent, message: unknown) {
-    const {data} = message as SaveMessage;
-    const {path} = message as SaveMessage;
+    const {data, id, path} = message as SaveMessage;
 
     if (!path) {
         mainWindow.webContents.send('savedFile', {
             path: path,
             success: false,
-            error: 'No path received'
+            error: 'No path received',
+            id
         });
     }
 
@@ -87,32 +94,36 @@ function handleSave(mainWindow: BrowserWindow, event: Electron.IpcMainEvent, mes
             mainWindow.webContents.send('savedFile', {
                 path: path,
                 success: false,
-                error: error
+                error: error,
+                id
             });
         } else {
             mainWindow.webContents.send('savedFile', {
                 path: path,
                 success: true,
+                id
             });
         }
     });
 }
 
 function handleLoad(mainWindow: BrowserWindow, event: Electron.IpcMainEvent, message: unknown) {
-    const {path} = message as LoadMessage;
+    const {path, id} = message as LoadMessage;
 
     fs.readFile(realPath(path), (error, data) => {
         if (error) {
             mainWindow.webContents.send('loadedFile', {
                 path: path,
                 success: false,
-                error: error
+                error: error,
+                id
             });
         } else {
             mainWindow.webContents.send('loadedFile', {
                 path: path,
                 success: true,
-                data
+                data,
+                id
             });
         }
     });
