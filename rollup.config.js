@@ -71,13 +71,13 @@ export default {
       browser: true,
       dedupe: ['svelte'],
     }),
-    commonjs(),
     json(),
     typescript({
       tsconfig: 'src/app/tsconfig.json',
       sourceMap: !production,
       inlineSources: !production,
     }),
+    commonjs(),
 
     // In dev mode, call `npm run start` once
     // the bundle has been generated

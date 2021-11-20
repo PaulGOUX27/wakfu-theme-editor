@@ -2,8 +2,8 @@
 
     import {Pixmap} from '../../types/core';
     import PixmapList from '../../Components/PixmapList.svelte';
+    import {themeStore} from '../../stores/themeStore';
 
-    export let data;
     let selectedPixmap: Pixmap = null;
 
     function handlePixmapClicked(event) {
@@ -14,7 +14,7 @@
 
 <main>
     <div id="pixmap-list">
-        <PixmapList pixmaps={data?.pixmaps} on:pixmapClicked={handlePixmapClicked}/>
+        <PixmapList pixmaps={$themeStore?.pixmaps} on:pixmapClicked={handlePixmapClicked}/>
     </div>
     <div id="content">
         {#if !selectedPixmap}
